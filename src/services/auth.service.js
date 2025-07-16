@@ -8,7 +8,7 @@ export const registerUser = async (name, email, password) => {
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     const error = new Error('Email sudah terdaftar');
-    error.statusCode = 400;
+    error.statusCode = 409;
     throw error;
   }
 

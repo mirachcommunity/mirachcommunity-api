@@ -3,10 +3,6 @@ import * as authService from '../services/auth.service.js';
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ success: false, message: 'Semua field harus diisi' });
-  }
-
   try {
     const user = await authService.registerUser(name, email, password);
     res.status(201).json({
@@ -24,11 +20,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ success: false, message: 'Email dan password harus diisi' });
-  }
-
+  
   try {
     const [token, user] = await authService.loginUser(email, password);
     res.status(200).json({
