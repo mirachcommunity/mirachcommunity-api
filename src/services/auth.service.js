@@ -7,9 +7,7 @@ const prisma = new PrismaClient();
 export const registerUser = async (name, email, password) => {
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
-    const error = new Error('Email sudah terdaftar');
-    error.statusCode = 409;
-    throw error;
+    throw new AppError('Email sudah terdaftar', 409);
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -29,16 +27,12 @@ export const registerUser = async (name, email, password) => {
 export const loginUser = async (email, password) => {
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
-    const error = new Error('Email atau password salah');
-    error.statusCode = 401;
-    throw error;
+    throw new AppError('Email atau password salah', 401);
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    const error = new Error('Email atau password salah');
-    error.statusCode = 401;
-    throw error;
+    throw new AppError('Email atau password salah', 401);
   }
 
   const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {

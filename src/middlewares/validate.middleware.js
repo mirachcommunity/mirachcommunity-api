@@ -1,3 +1,5 @@
+import { sendErrorResponse } from "../utils/response.util.js";
+
 export const validate = (schema) => async (req, res, next) => {
   try {
     await schema.parseAsync({
@@ -16,17 +18,9 @@ export const validate = (schema) => async (req, res, next) => {
         }
       }
 
-      return res.status(400).json({
-        success: false,
-        message: 'Validasi gagal',
-        errors: errorObject,
-      });
+      return sendErrorResponse(res, 400, 'Validasi gagal', errorObject);
     }
 
-    return res.status(500).json({
-      success: false,
-      message: 'Terjadi kesalahan pada server',
-      errors: [error.message],
-    });
+    return sendErrorResponse(res, 500, 'Terjadi kesalahan pada server', [error.message]);
   }
 };
