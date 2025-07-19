@@ -65,6 +65,21 @@ paths:
         '400':
           description: Bad Request - Validation error
 
+  /auth/google:
+    get:
+      tags:
+        - Authentication
+      summary: Google OAuth Login
+      description: Redirect to Google OAuth for user authentication.
+      responses:
+        '302':
+          description: Redirect to Google OAuth URL
+          headers:
+            Location:
+              description: URL to redirect to for Google OAuth
+              schema:
+                type: string
+
 components:
   schemas:
     # === Base Response ===

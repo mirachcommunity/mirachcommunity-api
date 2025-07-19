@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import * as authService from '../services/auth.service.js';
 import { sendSuccessResponse } from '../utils/response.util.js';
 
@@ -17,4 +18,14 @@ export const login = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+export const googleCallback = (req, res) => {
+  const user = req.user;
+
+  const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+    expiresIn: '1h',
+  });
+
+  sendSuccessResponse(res, 200, 'Login dengan Google berhasil', user, token);
 };
