@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { errorHandler } from './middlewares/error.middleware.js';
 import authRoutes from './routes/auth.route.js';
 
 const app = express();
@@ -15,5 +16,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/auth', authRoutes);
+
+app.use(errorHandler);
 
 export default app;
