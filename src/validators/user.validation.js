@@ -24,6 +24,6 @@ export const loginSchema = z.object({
 
     password: z.string({
       required_error: 'Password tidak boleh kosong',
-    }).min(1, { message: 'Password tidak boleh kosong' }),
+    }).min(8, { message: 'Password minimal harus 8 karakter' }),
   }),
 });
