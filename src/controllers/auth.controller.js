@@ -29,3 +29,18 @@ export const googleCallback = (req, res) => {
 
   sendSuccessResponse(res, 200, 'Login dengan Google berhasil', user, token);
 };
+
+export const verifyEmail = async (req, res, next) => {
+  try {
+    const { token } = req.query;
+    if (!token) {
+      throw new AppError('Token verifikasi tidak ditemukan', 400);
+    }
+
+    await authService.verifyUserEmail(token);
+    
+    res.send('<h1>Verifikasi email berhasil!</h1><p>Anda sekarang dapat login ke akun Anda.</p>');
+  } catch (error) {
+    next(error);
+  }
+};
