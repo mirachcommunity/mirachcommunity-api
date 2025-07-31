@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import logger from '../config/logger.config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -122,9 +123,9 @@ export const sendVerificationEmail = async (to, token) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Email verifikasi terkirim ke: ${to}`);
+    logger.info(`Email verifikasi berhasil dikirim ke ${to}`);
   } catch (error) {
-    console.error('❌ Gagal mengirim email verifikasi:', error);
+    logger.error('Gagal mengirim email verifikasi:', error);
     throw new Error('Gagal mengirim email verifikasi.');
   }
 };

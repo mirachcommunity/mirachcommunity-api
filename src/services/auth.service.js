@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import logger from '../config/logger.config.js';
 import { sendVerificationEmail } from '../utils/email.util.js';
 
 const prisma = new PrismaClient();
@@ -74,4 +75,6 @@ export const verifyUserEmail = async (token) => {
       verificationToken: null,
     },
   });
+
+  logger.info(`User verified successfully: { email: ${user.email}, userId: ${user.id} }`);
 };
