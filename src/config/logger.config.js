@@ -19,11 +19,11 @@ const logger = winston.createLogger({
         consoleFormat
       ),
     }),
-    new winston.transports.File({
-      filename: 'logs/error.log',
-      level: 'error',
-      format: combine(timestamp(), json()),
-    }),
+    // new winston.transports.File({
+    //   filename: 'logs/error.log',
+    //   level: 'error',
+    //   format: combine(timestamp(), json()),
+    // }),
   ],
   exitOnError: false,
 });

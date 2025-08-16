@@ -32,3 +32,15 @@ export const uploadAvatar = async (req, res, next) => {
     next(error);
   }
 };
+
+export const uploadBanner = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      throw new AppError('Tidak ada file yang diunggah', 400);
+    }
+    const profile = await profileService.updateUserBanner(req.user.id, req.file.path);
+    sendSuccessResponse(res, 200, 'Banner berhasil diunggah', { bannerUrl: profile.bannerUrl });
+  } catch (error) {
+    next(error);
+  }
+};

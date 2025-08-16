@@ -51,3 +51,12 @@ export const updateUserAvatar = async (userId, avatarUrl) => {
   });
   return profile;
 };
+
+export const updateUserBanner = async (userId, bannerUrl) => {
+  const profile = await prisma.profile.upsert({
+    where: { userId },
+    update: { bannerUrl },
+    create: { userId, bannerUrl },
+  });
+  return profile;
+};

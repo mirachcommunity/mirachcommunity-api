@@ -3,8 +3,16 @@ import { sendErrorResponse } from '../utils/response.util.js';
 import { ZodError } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 import logger from '../config/logger.config.js';
+import { MulterError } from 'multer';
 
 export const errorHandler = (error, req, res, next) => {
+  if (error instanceof MulterError) {
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return sendErrorResponse(res, 400, 'Ukuran file terlalu besar. Maksimal 1MB.');
+    }
+    return sendErrorResponse(res, 400, error.message);
+  }
+
   if (error instanceof ZodError) {
     const errorObject = {};
     for (const issue of error.issues) {
