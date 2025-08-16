@@ -4,7 +4,7 @@ import { sendSuccessResponse } from '../utils/response.util.js';
 
 export const register = async (req, res, next) => {
   try {
-    const user = await authService.registerUser(req.body.name, req.body.email, req.body.password);
+    const user = await authService.registerUser(req.body.username, req.body.email, req.body.password);
     sendSuccessResponse(res, 201, 'Registrasi berhasil', user);
   } catch (error) {
     next(error);

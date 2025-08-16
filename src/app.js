@@ -3,6 +3,7 @@ import cors from 'cors';
 import passport from 'passport';
 import { errorHandler } from './middlewares/error.middleware.js';
 import authRoutes from './routes/auth.route.js';
+import profileRoutes from './routes/profile.route.js';
 import './config/passport.config.js'; 
 
 const app = express();
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 
 app.use(errorHandler);
 

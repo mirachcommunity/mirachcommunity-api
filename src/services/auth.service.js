@@ -8,7 +8,7 @@ import { sendVerificationEmail } from '../utils/email.util.js';
 
 const prisma = new PrismaClient();
 
-export const registerUser = async (name, email, password) => {
+export const registerUser = async (username, email, password) => {
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     throw new AppError('Email sudah terdaftar', 409);
@@ -19,7 +19,7 @@ export const registerUser = async (name, email, password) => {
 
   const user = await prisma.user.create({
     data: {
-      name,
+      username,
       email,
       password: hashedPassword,
       verificationToken,
