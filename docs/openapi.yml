@@ -11,16 +11,43 @@ info:
     url: https://mirachcommunity.org/support
 
 servers:
-  - url: https://api-mirachcommunity.vercel.app/v1
+  - url: http://localhost:8000/api
+    description: Development server
+  - url: https://api-mirachcommunity.vercel.app/api
     description: Staging server
-  - url: https://api.mirachcommunity.org/v2
-    description: Production server
 
 tags:
   - name: Authentication
     description: Endpoints for user authentication and management
-    
+  - name: Profile
+    description: Endpoints for user profile management
+
 paths:
+  # === AUTHENTICATION PATHS ===
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: User Registration
+      description: Register a new user. An email verification will be sent.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Successful registration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Bad Request - Validation error
+        '409':
+          description: Conflict - Email or username already exists
+
   /auth/login:
     post:
       tags:
@@ -43,28 +70,6 @@ paths:
         '401':
           description: Unauthorized - Invalid credentials
 
-  /auth/register:
-    post:
-      tags:
-        - Authentication
-      summary: User Registration
-      description: Register a new user and return a success response.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RegisterRequest'
-      responses:
-        '201':
-          description: Successful registration
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RegisterResponse'
-        '400':
-          description: Bad Request - Validation error
-
   /auth/google:
     get:
       tags:
@@ -80,7 +85,111 @@ paths:
               schema:
                 type: string
 
+  # === PROFILE PATHS ===
+  /profile/{username}:
+    get:
+      tags:
+        - Profile
+      summary: Get User Profile by Username
+      description: Retrieve a user's profile information using their username.
+      parameters:
+        - in: path
+          name: username
+          required: true
+          schema:
+            type: string
+          description: The username of the user to retrieve.
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+        '404':
+          description: User not found
+
+  /profile:
+    put:
+      tags:
+        - Profile
+      summary: Update User Profile
+      description: Update the authenticated user's profile information (e.g., bio, date of birth).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+        '401':
+          description: Unauthorized
+
+  /profile/avatar:
+    post:
+      tags:
+        - Profile
+      summary: Upload Avatar
+      description: Upload or update the authenticated user's avatar. Max file size is 1MB.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+                  description: The avatar image file (max 1MB).
+      responses:
+        '200':
+          description: Avatar uploaded successfully
+        '400':
+          description: Bad request (e.g., file too large, invalid file type)
+        '401':
+          description: Unauthorized
+  
+  /profile/banner:
+    post:
+      tags:
+        - Profile
+      summary: Upload Banner
+      description: Upload or update the authenticated user's profile banner. Max file size is 1MB.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                banner:
+                  type: string
+                  format: binary
+                  description: The banner image file (max 1MB).
+      responses:
+        '200':
+          description: Banner uploaded successfully
+        '400':
+          description: Bad request (e.g., file too large, invalid file type)
+        '401':
+          description: Unauthorized
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     # === Base Response ===
     BaseResponse:
@@ -92,6 +201,25 @@ components:
           type: string
 
     # === Request Schemas ===
+    RegisterRequest:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          example: nurazissaputra
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: 'password123'
+    
     LoginRequest:
       type: object
       required:
@@ -104,22 +232,44 @@ components:
         password:
           type: string
 
-    RegisterRequest:
+    UpdateProfileRequest:
       type: object
-      required:
-        - email
-        - password
-        - name
       properties:
-        email:
+        bio:
           type: string
-          format: email
-        password:
+          example: "Software Developer at Mirach Community"
+        dateOfBirth:
           type: string
-        name:
+          format: date
+          example: "2002-08-17"
+
+    # === Data Object Schemas ===
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+        bio:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date-time
+          nullable: true
+        avatarUrl:
+          type: string
+          format: uri
+        bannerUrl:
+          type: string
+          format: uri
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        userId:
           type: string
 
-    # === Data Object Schema ===
     User:
       type: object
       properties:
@@ -127,7 +277,7 @@ components:
           type: string
         email:
           type: string
-        name:
+        username:
           type: string
         createdAt:
           type: string
@@ -135,8 +285,18 @@ components:
         updatedAt:
           type: string
           format: date-time
+        profile:
+          $ref: '#/components/schemas/Profile'
 
     # === Response Schemas ===
+    RegisterResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/User'
+
     LoginResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
@@ -147,7 +307,7 @@ components:
             token:
               type: string
 
-    RegisterResponse:
+    ProfileResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
         - type: object
