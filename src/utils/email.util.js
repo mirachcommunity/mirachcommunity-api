@@ -91,15 +91,15 @@ export const sendVerificationEmail = async (to, token) => {
         <body>
           <div class="container">
             <div class="header">
-              <img src="cid:logo" alt="Mirach Community Logo" />
+              <img src="https://res.cloudinary.com/dk7sycaqv/image/upload/v1755411934/logo_plain_zacqxu.png" alt="Mirach Community Logo" />
             </div>
             <div class="content">
               <p>
                 Terima kasih telah mendaftar di <strong>Mirach Community</strong>.<br />
                 Silakan klik tautan di bawah ini untuk memverifikasi alamat email Anda:
               </p>
-              <a href="${verificationLink}" class="btn">
-                Verifikasi Email
+              <a href="${verificationLink}" class="btn" style="color: #ffffff !important; text-decoration: none;">
+                  Verifikasi Email
               </a>
               <p style="margin-top: 30px; font-size: 14px; color: #777">
                 Jika Anda tidak merasa mendaftar, abaikan email ini.
@@ -112,13 +112,6 @@ export const sendVerificationEmail = async (to, token) => {
         </body>
       </html>
     `,
-    attachments: [
-      {
-        filename: 'logo_plain.png',
-        path: path.join(__dirname, '../../public/logo_plain.png'),
-        cid: 'logo'
-      }
-    ]
   };
 
   try {
