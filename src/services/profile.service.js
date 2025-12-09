@@ -23,12 +23,15 @@ export const getProfileByUsername = async (username) => {
 };
 
 export const updateUserProfile = async (userId, data) => {
-  const { bio, dateOfBirth } = data;
+  const { name, email, phone, bio, dateOfBirth } = data;
   const profile = await prisma.profile.upsert({
     where: { userId },
-    update: { bio, dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null },
+    update: { name, email, phone, bio, dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null },
     create: {
       userId,
+      name,
+      email,
+      phone,
       bio,
       dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
     },

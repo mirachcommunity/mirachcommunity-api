@@ -28,6 +28,9 @@ model User {
 
 model Profile {
   id          String    @id @default(uuid())
+  name        String?
+  email       String?   @unique
+  phone       String?
   bio         String?
   dateOfBirth DateTime? @map("date_of_birth")
   avatarUrl   String?   @map("avatar_url")

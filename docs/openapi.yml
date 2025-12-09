@@ -217,6 +217,16 @@ components:
     UpdateProfileRequest:
       type: object
       properties:
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+        phone:
+          type: string
+          example: "081234567890"
         bio:
           type: string
           example: "Software Developer at Mirach Community"
@@ -231,6 +241,16 @@ components:
       properties:
         id:
           type: string
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
         bio:
           type: string
         dateOfBirth:
