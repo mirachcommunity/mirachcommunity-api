@@ -2,9 +2,9 @@ import { z } from 'zod';
 
 export const registerSchema = z.object({
   body: z.object({
-    username: z.string({
-      required_error: 'Username tidak boleh kosong',
-    }).min(3, { message: 'Username minimal harus 3 karakter' }),
+    name: z.string({
+      required_error: 'Name tidak boleh kosong',
+    }).min(3, { message: 'Name minimal harus 3 karakter' }),
 
     email: z.string({
       required_error: 'Email tidak boleh kosong',
