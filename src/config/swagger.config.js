@@ -11,14 +11,24 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://127.0.0.1:8000/',
+        url: 'http://127.0.0.1:8000/api',
         description: 'Local server',
       },
       {
-        url: 'https://mirachcommunity-api.vercel.app/',
+        url: 'https://mirachcommunity-api.vercel.app/api',
         description: 'Staging server',
       },
     ],
+
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
   apis: [path.join(process.cwd(), 'src/routes/*.js'), path.join(process.cwd(), 'src/app.js')],
 };

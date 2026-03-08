@@ -10,7 +10,7 @@ import profileRoutes from './routes/profile.route.js';
 
 // Import Configurations
 import './config/passport.config.js'; 
-import swaggerSpec from './config/swagger.config.js'
+import swaggerSpec from './config/swagger.config.js';
 
 const app = express();
 
@@ -42,17 +42,14 @@ app.use(
  * Route: Root / Welcome
  */
 app.get('/', (req, res) => {
-  return res.json({
-    success: true,
-    message: 'Welcome to Mirach Community API V1!'
-  });
+  return res.redirect('/api-docs');
 });
 
 /**
  * API Routes
  */
-app.use('/api/auth', authRoutes); // Route untuk registrasi, login, dan verifikasi email
-app.use('/api/profile', profileRoutes); // Route untuk pengelolaan data profil pengguna
+app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 
 /**
  * Error Handling Middleware
